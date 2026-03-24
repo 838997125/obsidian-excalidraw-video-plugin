@@ -1,0 +1,1 @@
+export { SlideManager } from './SlideManager';

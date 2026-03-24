@@ -1,0 +1,383 @@
+/* 幻灯片管理器样式 */
+.slide-manager {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 60px;
+  z-index: 1000;
+}
+
+.slide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.slide-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.slide-count {
+  font-size: 11px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.slide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.slide-item {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.slide-item:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.slide-item.active {
+  border-color: #3b82f6;
+  background: #3b82f6;
+  color: white;
+}
+
+.slide-number {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.slide-add-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px dashed #d1d5db;
+  background: #f9fafb;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.slide-add-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: #eff6ff;
+}
+
+.slide-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.slide-nav-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.slide-nav-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.slide-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.slide-indicator {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* 视频录制面板样式 */
+.video-recorder-wrapper {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 1000;
+}
+
+.video-recorder-panel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 8px 12px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.recorder-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.recorder-btn:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.recorder-btn.active {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.recorder-btn.record-btn {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.recorder-btn.record-btn:hover {
+  background: #fee2e2;
+}
+
+.recorder-btn.pause-btn {
+  background: #fffbeb;
+  border-color: #fcd34d;
+  color: #d97706;
+}
+
+.recorder-btn.resume-btn {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #16a34a;
+}
+
+.recorder-btn.stop-btn {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+/* 提示词浮动框样式 */
+.prompt-overlay {
+  position: fixed;
+  width: 300px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  overflow: hidden;
+}
+
+.prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  cursor: move;
+  user-select: none;
+}
+
+.prompt-header span {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.prompt-close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prompt-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.prompt-list {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.prompt-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.prompt-item textarea {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 13px;
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+.prompt-item textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.prompt-remove {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.prompt-remove:hover {
+  color: #ef4444;
+  background: #fef2f2;
+}
+
+.prompt-add {
+  margin: 0 12px 12px;
+  padding: 10px;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+  cursor: pointer;
+  font-size: 13px;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.prompt-add:hover {
+  border-color: #667eea;
+  color: #667eea;
+  background: #f5f3ff;
+}
+
+/* 滚动条样式 */
+.slide-list::-webkit-scrollbar,
+.prompt-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.slide-list::-webkit-scrollbar-track,
+.prompt-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.slide-list::-webkit-scrollbar-thumb,
+.prompt-list::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.slide-list::-webkit-scrollbar-thumb:hover,
+.prompt-list::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* 录制状态指示器 */
+.recording-indicator {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #dc2626;
+  color: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 1002;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.recording-dot {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
