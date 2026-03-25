@@ -335,7 +335,7 @@ Drag the desired file from the Obsidian file explorer and hold down <kbd>SHIFT</
 Join the conversation about the Excalidraw plugin on
 [forum.obsidian.md](https://forum.obsidian.md/t/excalidraw-full-featured-sketching-plugin-in-obsidian)
 
-Please head over to [GitHub](https://github.com/zsviczian/obsidian-excalidraw-plugin/issues) to
+Please head over to [GitHub](https://github.com/838997125/obsidian-excalidraw-video-plugin/issues) to
 report a bug or request an enhancement.
 
 ---

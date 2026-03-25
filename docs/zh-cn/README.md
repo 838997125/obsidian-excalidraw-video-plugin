@@ -268,19 +268,15 @@ Obsidian-Excalidraw 插件将 [Excalidraw](https://excalidraw.com/) 这一功能
 
 请在 [forum.obsidian.md](https://forum.obsidian.md/t/excalidraw-full-featured-sketching-plugin-in-obsidian) 上参与关于 Excalidraw 插件的讨论。
 
-请前往 [GitHub](https://github.com/zsviczian/obsidian-excalidraw-plugin/issues) 报告错误或请求增强功能。
+请前往 [GitHub](https://github.com/838997125/obsidian-excalidraw-video-plugin/issues) 报告错误或请求增强功能。
 
 ---
 
 ## 感谢支持
 
-如果您喜欢 Excalidraw，请通过在 [https://ko-fi/zsolt](https://ko-fi.com/zsolt) 上请我喝杯咖啡来支持我的工作和热情。
+如果您喜欢 Excalidraw Video 插件，请支持我的工作：
 
-请通过在 Twitter、Reddit 或其他您常用的社交媒体平台上分享 Obsidian Excalidraw 插件来帮助传播消息。
-
-您可以在 Twitter 上找到我 [@zsviczian](https://twitter.com/zsviczian)，以及我的博客 [zsolt.blog](https://zsolt.blog)。
-
-[<img style="float:left" src="https://user-images.githubusercontent.com/14358394/115450238-f39e8100-a21b-11eb-89d0-fa4b82cdbce8.png" width="200">](https://ko-fi.com/zsolt)
+[捐赠支持](http://118.178.228.37/donate.html)
 
 ---
 
