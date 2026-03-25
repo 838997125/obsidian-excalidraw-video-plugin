@@ -2150,7 +2150,22 @@ export default class ExcalidrawView extends TextFileView implements HoverParent{
     //I noticed Obsidian calls this function twice when disabling the plugin
     //once from "unregisterView"
     //the from "detachLeavesOfType"
-    if(!this.dropManager && !this.excalidrawRoot) return; //the view is already closed
+    
+    // 首先清理 ObsidianMenu 资源（画框面板、提词器等）
+    // 这是为了防止切换文件时面板不消失的问题
+    if (this.obsidianMenu) {
+      try {
+        this.obsidianMenu.destroy();
+      } catch (e) {
+        console.warn('Error destroying obsidianMenu:', e);
+      }
+      this.obsidianMenu = null;
+    }
+    
+    // 如果视图已经关闭，直接返回
+    if(!this.dropManager && !this.excalidrawRoot) {
+      return; //the view is already closed
+    }
 
     // This happens when the user right clicks a tab and selects delete
     // in this case the onDelete event handler tirggers, but then Obsidian's delete event handler reaches onclose first, and
@@ -2187,6 +2202,12 @@ export default class ExcalidrawView extends TextFileView implements HoverParent{
       if(this.plugin.ea?.targetView === this) {
         this.plugin.ea.targetView = null;
       }
+    }
+
+    // 清理 ObsidianMenu 资源（画框面板、提词器等）
+    if (this.obsidianMenu) {
+      this.obsidianMenu.destroy();
+      this.obsidianMenu = null;
     }
 
     this.excalidrawAPI = null;
@@ -2337,6 +2358,17 @@ export default class ExcalidrawView extends TextFileView implements HoverParent{
       this.nextLoader.terminate = true;
       this.nextLoader.emptyPDFDocsMap();
       this.nextLoader = null;
+    }
+
+    // 清理 ObsidianMenu 资源（画框面板、提词器等）
+    // 在 onunload 中也进行清理，确保切换文件时面板被正确移除
+    if (this.obsidianMenu) {
+      try {
+        this.obsidianMenu.destroy();
+      } catch (e) {
+        console.warn('Error destroying obsidianMenu in onunload:', e);
+      }
+      this.obsidianMenu = null;
     }
 
     (process.env.NODE_ENV === 'development') && DEBUGGING && debug(this.onunload,`ExcalidrawView.onunload, completed`);
@@ -5820,16 +5852,6 @@ export default class ExcalidrawView extends TextFileView implements HoverParent{
           React.createElement(
             WelcomeScreen.Center.MenuItemLink,
             {
-              icon: ICONS.twitter,
-              href: "https://twitter.com/zsviczian",
-              shortcut: null,
-              "aria-label": t("WELCOME_TWITTER_ARIA"),
-            },
-            t("WELCOME_TWITTER_LINK")
-          ),
-          React.createElement(
-            WelcomeScreen.Center.MenuItemLink,
-            {
               icon: ICONS.Learn,
               href: "https://visual-thinking-workshop.com",
               shortcut: null,
@@ -5841,11 +5863,11 @@ export default class ExcalidrawView extends TextFileView implements HoverParent{
             WelcomeScreen.Center.MenuItemLink,
             {
               icon: ICONS.heart,
-              href: "https://ko-fi.com/zsolt",
+              href: "http://118.178.228.37/donate.html",
               shortcut: null,
-              "aria-label": t("WELCOME_DONATE_ARIA"),
+              "aria-label": "支持此插件",
             },
-            t("WELCOME_DONATE_LINK")
+            "支持此插件"
           ),
         )
       )

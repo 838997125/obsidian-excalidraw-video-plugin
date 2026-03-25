@@ -197,6 +197,56 @@ You can edit formulas either in Markdown view or by <kbd>CTRL/CMD + Click</kbd> 
 ### Block referencing parts of images
 
 For more details, see this [video](https://youtu.be/yZQoJg2RCKI)
+
+---
+
+## 🎬 Video Recording & Frame Management Features
+
+This enhanced version includes powerful video recording and frame management features for creating video content directly in Excalidraw.
+
+### Video Recording
+
+- **Screen Recording**: Record your Excalidraw canvas with optional camera overlay
+- **Camera Preview**: Picture-in-picture camera preview that can be repositioned during recording
+- **Recording Controls**: Start, pause, resume, and stop recording with visual indicators
+- **WebM Export**: Recordings are saved as WebM video files in your vault
+
+### Frame Management
+
+- **Frame Panel**: A dedicated panel on the left side for managing drawing frames
+- **Create Frames**: Add new frames with blue borders to organize your content
+- **Frame Navigation**: Click on frames in the panel to quickly jump to different areas
+- **Keyboard Shortcuts**: Use left/right arrow keys to quickly switch between frames
+- **Frame Persistence**: Frames are saved with your drawing and restored when you switch files
+
+### Frame Operations
+
+- **Add Frame**: Click the "+" button to create a new frame at the current view position
+- **Delete Frame**: Right-click on a frame to delete it, or use the delete all button
+- **Rename Frame**: Double-click or right-click to rename frames
+- **Delete All**: Remove all frames at once with the trash button
+
+### Teleprompter
+
+- **On-screen Teleprompter**: A floating text panel for reading scripts while recording
+- **Customizable Position**: Drag and resize the teleprompter panel
+- **Auto-scroll**: Automatic text scrolling with adjustable speed
+- **Transparency Control**: Adjust teleprompter opacity for better visibility
+
+### Camera Settings
+
+- **Camera Toggle**: Enable/disable camera preview during recording
+- **Camera Position**: Drag the camera preview to any position on screen
+- **Recording Settings**: Configure aspect ratio, camera shape, and size
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `←` / `→` | Switch between frames (when frame panel is open) |
+| `↑` / `↓` | Switch between frames (when hovering over frame panel) |
+
+---
 - When referencing an element on the canvas in a link pointing to an Excalidraw file using
   - The elementId or the section header (i.e. a Text Element containing the `# <Section title>`)
       - e.g. `[[file#^elementID]]`,

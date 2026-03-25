@@ -1,12 +1,12 @@
 {
-  "id": "obsidian-excalidraw-plugin",
-  "name": "Excalidraw",
+  "id": "obsidian-excalidraw-video-plugin",
+  "name": "Excalidraw Video",
   "version": "2.21.2",
   "minAppVersion": "1.5.7",
-  "description": "Sketch Your Mind. An Obsidian plugin to edit and view Excalidraw drawings. Enter the world of 4D Visual PKM.",
-  "author": "Zsolt Viczian",
-  "authorUrl": "https://excalidraw-obsidian.online",
-  "fundingUrl": "https://ko-fi.com/zsolt",
+  "description": "Excalidraw plugin with video recording and frame management features",
+  "author": "ZYQ",
+  "authorUrl": "http://118.178.228.37",
+  "fundingUrl": "http://118.178.228.37/donate.html",
   "helpUrl": "https://github.com/zsviczian/obsidian-excalidraw-plugin#readme",
   "isDesktopOnly": false
 } 

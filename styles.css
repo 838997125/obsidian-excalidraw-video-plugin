@@ -1164,3 +1164,616 @@ textarea.excalidraw-wysiwyg, .excalidraw input {
 .is-mobile .excalidraw.excalidraw--mobile .FixedSideContainer.FixedSideContainer_side_top.App-top-bar {
   margin-top: 1rem
 }
+
+/* VideoRecorder �����ʽ */
+/* 幻灯片管理器样式 */
+.slide-manager {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 60px;
+  z-index: 1000;
+}
+
+.slide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.slide-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.slide-count {
+  font-size: 11px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.slide-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.slide-item {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.slide-item:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.slide-item.active {
+  border-color: #3b82f6;
+  background: #3b82f6;
+  color: white;
+}
+
+.slide-number {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.slide-add-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px dashed #d1d5db;
+  background: #f9fafb;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.slide-add-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: #eff6ff;
+}
+
+.slide-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.slide-nav-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.slide-nav-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.slide-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.slide-indicator {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* 视频录制面板样式 */
+.video-recorder-wrapper {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 1000;
+}
+
+.video-recorder-panel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 8px 12px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.recorder-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.recorder-btn:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.recorder-btn.active {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.recorder-btn.record-btn {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.recorder-btn.record-btn:hover {
+  background: #fee2e2;
+}
+
+.recorder-btn.pause-btn {
+  background: #fffbeb;
+  border-color: #fcd34d;
+  color: #d97706;
+}
+
+.recorder-btn.resume-btn {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #16a34a;
+}
+
+.recorder-btn.stop-btn {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+/* 提示词浮动框样式 */
+.prompt-overlay {
+  position: fixed;
+  width: 300px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  overflow: hidden;
+}
+
+.prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  cursor: move;
+  user-select: none;
+}
+
+.prompt-header span {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.prompt-close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prompt-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.prompt-list {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.prompt-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.prompt-item textarea {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 13px;
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+.prompt-item textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.prompt-remove {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.prompt-remove:hover {
+  color: #ef4444;
+  background: #fef2f2;
+}
+
+.prompt-add {
+  margin: 0 12px 12px;
+  padding: 10px;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+  cursor: pointer;
+  font-size: 13px;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.prompt-add:hover {
+  border-color: #667eea;
+  color: #667eea;
+  background: #f5f3ff;
+}
+
+/* 滚动条样�?*/
+.slide-list::-webkit-scrollbar,
+.prompt-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.slide-list::-webkit-scrollbar-track,
+.prompt-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.slide-list::-webkit-scrollbar-thumb,
+.prompt-list::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.slide-list::-webkit-scrollbar-thumb:hover,
+.prompt-list::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* 录制状态指示器 */
+.recording-indicator {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #dc2626;
+  color: white;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 1002;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.recording-dot {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* 摄像头预览组件样�?*/
+.camera-preview-container {
+  position: fixed;
+  z-index: 999;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  cursor: move;
+  user-select: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.camera-preview-container:hover {
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
+}
+
+.camera-preview-container.dragging {
+  opacity: 0.9;
+  cursor: grabbing;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+
+.camera-preview-container.resizing {
+  cursor: nwse-resize;
+}
+
+/* 拖动手柄 */
+.camera-preview-drag-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  z-index: 10;
+  cursor: grab;
+}
+
+.camera-preview-drag-handle:active {
+  cursor: grabbing;
+}
+
+.camera-preview-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+/* 视频元素 */
+.camera-preview-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* 调整大小手柄 */
+.camera-preview-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  cursor: nwse-resize;
+  z-index: 10;
+}
+
+.camera-preview-resize-handle::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 12px;
+  height: 12px;
+  border-right: 2px solid rgba(255, 255, 255, 0.6);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 0 0 4px 0;
+}
+
+.camera-preview-resize-handle:hover::after {
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+/* 边框装饰 */
+.camera-preview-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  pointer-events: none;
+  transition: border-color 0.2s ease;
+}
+
+.camera-preview-container:hover .camera-preview-border {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* 录制状态下的摄像头边框 */
+.camera-preview-container.recording .camera-preview-border {
+  border-color: #ef4444;
+  animation: recording-pulse 1.5s infinite;
+}
+
+@keyframes recording-pulse {
+  0%, 100% {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+  }
+}
+
+/* 摄像头控制按�?*/
+.camera-controls {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.camera-preview-container:hover .camera-controls {
+  opacity: 1;
+}
+
+.camera-control-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.camera-control-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.camera-control-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* 录制时长显示 */
+.recorder-duration {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #fef2f2;
+  border-radius: 4px;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.recorder-duration .duration-text {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  min-width: 45px;
+}
+
+.recorder-duration .duration-text.paused {
+  color: #d97706;
+}
+
+/* 录制面板紧凑模式 */
+.video-recorder-panel.compact {
+  padding: 6px 8px;
+}
+
+.video-recorder-panel.compact .recorder-btn {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.video-recorder-panel.compact .recorder-btn span:not(:first-child) {
+  display: none;
+}
+
+/* 录制按钮动画 */
+.recorder-btn.record-btn:hover {
+  animation: record-pulse 1s infinite;
+}
+
+@keyframes record-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* 录制中状�?*/
+.video-recorder-panel.recording {
+  border: 2px solid #ef4444;
+  animation: recording-border-pulse 2s infinite;
+}
+
+@keyframes recording-border-pulse {
+  0%, 100% {
+    border-color: #ef4444;
+  }
+  50% {
+    border-color: #fecaca;
+  }
+}
+
