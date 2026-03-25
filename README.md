@@ -342,15 +342,9 @@ report a bug or request an enhancement.
 
 ## Say Thank You
 
-If you are enjoying Excalidraw, then please support my work and enthusiasm by buying me a coffee on
-[https://ko-fi/zsolt](https://ko-fi.com/zsolt).
+If you are enjoying Excalidraw Video Plugin, then please support my work:
 
-Please also help spread the word by sharing about the Obsidian Excalidraw Plugin on Twitter, Reddit,
-or any other social media platform you regularly use.
-
-You can find me on Twitter [@zsviczian](https://twitter.com/zsviczian), and on my blog [zsolt.blog](https://zsolt.blog).
-
-[<img style="float:left" src="https://user-images.githubusercontent.com/14358394/115450238-f39e8100-a21b-11eb-89d0-fa4b82cdbce8.png" width="200">](https://ko-fi.com/zsolt)
+[Donate](http://118.178.228.37/donate.html)
 
 ---
 
