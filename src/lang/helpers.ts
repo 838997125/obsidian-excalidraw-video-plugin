@@ -11,25 +11,10 @@ let locale: Partial<typeof en> | null = null;
 function loadLocale(lang: string): Partial<typeof en> {
   if(lang === "zh") lang = "zh-cn"; //https://github.com/zsviczian/obsidian-excalidraw-plugin/issues/2247
   if (Object.keys(PLUGIN_LANGUAGES).includes(lang)) {
-    try {
-      const decompressed = LZString.decompressFromBase64(PLUGIN_LANGUAGES[lang]);
-      if (!decompressed) {
-        console.warn(`Failed to decompress locale data for "${lang}"`);
-        return en;
-      }
-      let x = {};
-      // The locale data is JavaScript code that populates the x object
-      // This is safe because the locale data comes from the plugin itself
-      eval(decompressed);
-      if (Object.keys(x).length > 0) {
-        return x;
-      }
-      console.warn(`Parsed locale "${lang}" is empty, falling back to English`);
-      return en;
-    } catch (error) {
-      console.error(`Error loading locale "${lang}":`, error);
-      return en;
-    }
+    const decompressed = LZString.decompressFromBase64(PLUGIN_LANGUAGES[lang]);
+    let x = {};
+    eval(decompressed);
+    return x;
   } else {
     return en;
   }
@@ -39,47 +24,7 @@ export function t(str: keyof typeof en): string {
   if (!locale) {
     locale = loadLocale(LOCALE);
   }
-  // Only fallback for undefined/null, preserve empty strings
-  const translated = locale?.[str];
-  if (translated !== undefined && translated !== null) {
-    return translated;
-  }
-  return en[str];
-}
-
-/**
- * Check if a translation key exists
- * @param str Translation key
- * @returns Whether the key exists in current locale
- */
-export function hasTranslation(str: keyof typeof en): boolean {
-  if (!locale) {
-    locale = loadLocale(LOCALE);
-  }
-  return locale?.[str] !== undefined || en[str] !== undefined;
-}
-
-/**
- * Get all translation keys
- * @returns Array of translation keys
- */
-export function getTranslationKeys(): (keyof typeof en)[] {
-  return Object.keys(en) as (keyof typeof en)[];
-}
-
-/**
- * Get current locale code
- * @returns Current locale code
- */
-export function getCurrentLocale(): string {
-  return LOCALE;
-}
-
-/**
- * Force reload locale (useful for language switching)
- */
-export function reloadLocale(): void {
-  locale = null;
+  return (locale && locale[str]) || en[str];
 }
 
 /*
