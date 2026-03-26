@@ -2,13 +2,32 @@ import { Notice } from "obsidian";
 import { debug, DEBUGGING } from "./debugHelper";
 
 /**
+ * Error severity levels
+ */
+export type ErrorSeverity = 'low' | 'medium' | 'high' | 'critical';
+
+/**
+ * Error log entry
+ */
+export interface ErrorLogEntry {
+  error: Error;
+  context: string;
+  timestamp: number;
+  severity: ErrorSeverity;
+  handled: boolean;
+  userMessage?: string;
+}
+
+/**
  * Centralized error handling for the Excalidraw plugin
  */
 export class ErrorHandler {
   private static instance: ErrorHandler;
-  private errorLog: Array<{error: Error, context: string, timestamp: number}> = [];
+  private errorLog: ErrorLogEntry[] = [];
   private errorNoticeTimeout: number = 10000; // 10 seconds
   private maxLogEntries: number = 100;
+  private globalHandlersInitialized: boolean = false;
+  private onErrorHandler: ((error: Error, context: string) => void) | null = null;
   
   private constructor() {}
   
@@ -131,6 +150,178 @@ export class ErrorHandler {
    */
   public clearErrorLog(): void {
     this.errorLog = [];
+  }
+
+  /**
+   * Initialize global error handlers
+   * Captures unhandled promise rejections and global errors
+   */
+  public initGlobalHandlers(): void {
+    if (this.globalHandlersInitialized) {
+      return;
+    }
+
+    // Capture unhandled promise rejections
+    window.addEventListener('unhandledrejection', (event) => {
+      const error = event.reason instanceof Error 
+        ? event.reason 
+        : new Error(String(event.reason));
+      
+      this.handleError(
+        error,
+        'Unhandled Promise Rejection',
+        true,
+        15000,
+        'high'
+      );
+      
+      // Prevent default browser error logging
+      event.preventDefault();
+    });
+
+    // Capture global errors
+    window.addEventListener('error', (event) => {
+      // Ignore errors from other scripts (e.g., browser extensions)
+      if (event.filename && !event.filename.includes('excalidraw')) {
+        return;
+      }
+
+      const error = event.error || new Error(event.message);
+      
+      this.handleError(
+        error,
+        `Global Error at ${event.filename}:${event.lineno}`,
+        true,
+        15000,
+        'high'
+      );
+      
+      event.preventDefault();
+    });
+
+    this.globalHandlersInitialized = true;
+  }
+
+  /**
+   * Set a custom error handler callback
+   * @param handler Function to call on each error
+   */
+  public setOnErrorHandler(handler: (error: Error, context: string) => void): void {
+    this.onErrorHandler = handler;
+  }
+
+  /**
+   * Handle error with severity level
+   * @param error The error object
+   * @param context Context information
+   * @param showNotice Whether to show user notice
+   * @param timeout Notice timeout
+   * @param severity Error severity level
+   */
+  public handleErrorWithSeverity(
+    error: Error | string,
+    context: string,
+    showNotice: boolean = true,
+    timeout?: number,
+    severity: ErrorSeverity = 'medium'
+  ): void {
+    const errorObj = typeof error === 'string' ? new Error(error) : error;
+    
+    // Log to console with severity indicator
+    const logMethod = severity === 'critical' || severity === 'high' 
+      ? console.error 
+      : severity === 'medium' 
+        ? console.warn 
+        : console.log;
+    
+    logMethod(`[Excalidraw ${severity.toUpperCase()}] in ${context}:`, errorObj);
+    
+    // Add to error log
+    this.errorLog.push({
+      error: errorObj,
+      context,
+      timestamp: Date.now(),
+      severity,
+      handled: false,
+    });
+    
+    // Trim log
+    if (this.errorLog.length > this.maxLogEntries) {
+      this.errorLog = this.errorLog.slice(-this.maxLogEntries);
+    }
+    
+    // Show notice for high severity
+    if (showNotice && (severity === 'high' || severity === 'critical')) {
+      const formattedError = this.formatErrorForUser(errorObj, context);
+      new Notice(formattedError, timeout || this.errorNoticeTimeout);
+    }
+
+    // Call custom handler if set
+    if (this.onErrorHandler) {
+      this.onErrorHandler(errorObj, context);
+    }
+
+    // Debug output
+    if ((process.env.NODE_ENV === 'development') && DEBUGGING) {
+      debug(this.handleErrorWithSeverity, `ErrorHandler.handleErrorWithSeverity: ${context}`, errorObj);
+    }
+  }
+
+  /**
+   * Mark an error as handled
+   * @param index Error log index
+   */
+  public markAsHandled(index: number): void {
+    if (index >= 0 && index < this.errorLog.length) {
+      this.errorLog[index].handled = true;
+    }
+  }
+
+  /**
+   * Get errors by severity
+   * @param severity Minimum severity level
+   * @returns Filtered error log
+   */
+  public getErrorsBySeverity(severity: ErrorSeverity): ErrorLogEntry[] {
+    const severityOrder: ErrorSeverity[] = ['low', 'medium', 'high', 'critical'];
+    const minIndex = severityOrder.indexOf(severity);
+    
+    return this.errorLog.filter(entry => {
+      const entryIndex = severityOrder.indexOf(entry.severity);
+      return entryIndex >= minIndex;
+    });
+  }
+
+  /**
+   * Get unhandled errors
+   * @returns Unhandled error entries
+   */
+  public getUnhandledErrors(): ErrorLogEntry[] {
+    return this.errorLog.filter(entry => !entry.handled);
+  }
+
+  /**
+   * Export error log as JSON
+   * @returns JSON string of error log
+   */
+  public exportErrorLog(): string {
+    return JSON.stringify(this.errorLog.map(entry => ({
+      message: entry.error.message,
+      stack: entry.error.stack,
+      context: entry.context,
+      timestamp: new Date(entry.timestamp).toISOString(),
+      severity: entry.severity,
+      handled: entry.handled,
+    })), null, 2);
+  }
+
+  /**
+   * Cleanup global handlers (for plugin unload)
+   */
+  public cleanup(): void {
+    this.globalHandlersInitialized = false;
+    this.errorLog = [];
+    this.onErrorHandler = null;
   }
 }
 
