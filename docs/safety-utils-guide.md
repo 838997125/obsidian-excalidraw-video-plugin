@@ -7,7 +7,9 @@
 1. [错误处理 (ErrorHandler)](#错误处理-errorhandler)
 2. [输入验证 (ValidationUtils)](#输入验证-validationutils)
 3. [重试机制 (RetryUtils)](#重试机制-retryutils)
-4. [迁移指南](#迁移指南)
+4. [锁管理器 (LockManager)](#锁管理器-lockmanager)
+5. [类型安全 (TypeSafe)](#类型安全-typesafe)
+6. [迁移指南](#迁移指南)
 
 ---
 
@@ -220,6 +222,93 @@ results.forEach((result, index) => {
 
 ---
 
+## 锁管理器 (LockManager)
+
+用于协调并发操作，防止竞态条件。
+
+### 基本使用
+
+```typescript
+import { globalLockManager, withLock } from 'src/utils/lockManager';
+
+// 使用 withLock 便捷函数
+const result = await withLock(
+  'file-save-lock',
+  async () => {
+    // 这段代码在同一时间只能有一个执行
+    return await saveFile(data);
+  },
+  'save-operation'
+);
+```
+
+### 使用锁管理器实例
+
+```typescript
+import { fileLockManager } from 'src/utils/lockManager';
+
+// 手动获取和释放锁
+const release = await fileLockManager.acquire('my-file-path', 'file-editor');
+try {
+  // 安全地操作文件
+  await editFile();
+} finally {
+  release();
+}
+```
+
+### 检查锁状态
+
+```typescript
+if (fileLockManager.isLocked('my-file-path')) {
+  console.log('文件正在被其他操作使用');
+}
+```
+
+---
+
+## 类型安全 (TypeSafe)
+
+替代 `@ts-ignore`，提供类型安全的属性访问。
+
+### 替换 @ts-ignore
+
+**旧代码:**
+```typescript
+//@ts-ignore
+const leafId = leaf.id;
+```
+
+**新代码:**
+```typescript
+import { TypeSafe } from 'src/utils/typeSafe';
+
+const leafId = TypeSafe.getLeafId(leaf);
+```
+
+### 常用方法
+
+```typescript
+import { TypeSafe } from 'src/utils/typeSafe';
+
+// 安全获取属性
+const parent = TypeSafe.getLeafParent(leaf);
+const children = TypeSafe.getParentChildren(parent);
+
+// 类型守卫
+if (TypeSafe.isWorkspaceLeaf(obj)) {
+  const id = obj.id;  // 类型安全
+}
+
+// 安全获取 PDF 页码
+const pageNum = TypeSafe.getPDFPageNumber(pdfView);
+
+// 安全调用函数
+const result = TypeSafe.safeCall(() => someFunction(), fallbackValue);
+```
+
+---
+
 ## 迁移指南
 
 ### 替换 `eval()` 调用
@@ -262,6 +351,24 @@ try {
 }
 ```
 
+### 替换 @ts-ignore
+
+**旧代码:**
+```typescript
+//@ts-ignore
+const leafId = leaf.id;
+//@ts-ignore
+const parent = leaf.parent;
+```
+
+**新代码:**
+```typescript
+import { TypeSafe } from 'src/utils/typeSafe';
+
+const leafId = TypeSafe.getLeafId(leaf);
+const parent = TypeSafe.getLeafParent(leaf);
+```
+
 ### 添加重试逻辑
 
 **旧代码:**
@@ -277,6 +384,22 @@ const data = await withRetry(
   () => fetchData(),
   { ...RetryStrategies.network, context: 'fetch-data' }
 );
+```
+
+### 添加并发保护
+
+**旧代码:**
+```typescript
+const path = getNewUniqueFilepath(vault, filename, folderpath);
+await vault.create(path, content);
+```
+
+**新代码:**
+```typescript
+import { getNewUniqueFilepathAsync, safeCreateFile } from 'src/utils/fileUtils';
+
+const path = await getNewUniqueFilepathAsync(vault, filename, folderpath);
+await safeCreateFile(vault, path, content);
 ```
 
 ---
@@ -298,15 +421,26 @@ const data = await withRetry(
    await withRetry(() => networkCall(), RetryStrategies.network);
    ```
 
-4. **使用适当的错误严重级别**
+4. **使用锁保护并发操作**
+   ```typescript
+   await withLock('resource-key', () => criticalOperation());
+   ```
+
+5. **使用 TypeSafe 替代 @ts-ignore**
+   ```typescript
+   const id = TypeSafe.getLeafId(leaf);  // 替代 @ts-ignore
+   ```
+
+6. **使用适当的错误严重级别**
    - `low`: 不影响用户操作的小问题
    - `medium`: 影响部分功能但可继续使用
    - `high`: 影响核心功能
    - `critical`: 导致插件无法使用
 
-5. **在插件卸载时清理资源**
+7. **在插件卸载时清理资源**
    ```typescript
    errorHandler.cleanup();
+   globalLockManager.clearAll();
    ```
 
 ---
@@ -316,5 +450,8 @@ const data = await withRetry(
 - `src/utils/ErrorHandler.ts` - 错误处理器
 - `src/utils/validationUtils.ts` - 输入验证工具
 - `src/utils/retryUtils.ts` - 重试机制
+- `src/utils/lockManager.ts` - 锁管理器
+- `src/utils/typeSafe.ts` - 类型安全工具
 - `src/lang/helpers.ts` - 更安全的语言加载
 - `src/utils/safety.ts` - 统一导出
+- `src/types/obsidian-extensions.d.ts` - Obsidian 类型扩展

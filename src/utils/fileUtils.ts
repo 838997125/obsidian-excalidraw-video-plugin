@@ -85,6 +85,128 @@ export function getNewUniqueFilepath(
   return fname;
 }
 
+/**
+ * Async version of getNewUniqueFilepath with concurrency protection
+ * Uses a lock mechanism to prevent race conditions when multiple operations
+ * try to create files with the same name simultaneously
+ * @param vault
+ * @param filename
+ * @param folderpath
+ * @param lockKey Optional key for lock coordination
+ * @returns Promise<string> - unique filepath
+ */
+const fileCreationLocks = new Map<string, Promise<void>>();
+
+export async function getNewUniqueFilepathAsync(
+  vault: Vault,
+  filename: string,
+  folderpath: string,
+  lockKey?: string,
+): Promise<string> {
+  const lockId = lockKey || `${folderpath}/${filename}`;
+  
+  // Wait for any existing lock to complete
+  while (fileCreationLocks.has(lockId)) {
+    await fileCreationLocks.get(lockId);
+  }
+  
+  // Create new lock
+  let lockResolver: () => void;
+  const lockPromise = new Promise<void>(resolve => {
+    lockResolver = resolve;
+  });
+  fileCreationLocks.set(lockId, lockPromise);
+  
+  try {
+    const extension = filename.endsWith(".excalidraw.md")
+      ? ".excalidraw.md"
+      : filename.slice(filename.lastIndexOf("."));
+    
+    const maxAttempts = 1000;
+    
+    for (let i = 0; i < maxAttempts; i++) {
+      const baseName = filename.slice(0, filename.lastIndexOf(extension));
+      const fname = i === 0
+        ? normalizePath(`${folderpath}/${filename}`)
+        : normalizePath(`${folderpath}/${baseName}_${i}${extension}`);
+      
+      const file = vault.getAbstractFileByPath(fname);
+      
+      if (!file) {
+        // Try to create an empty file to reserve the path
+        try {
+          await vault.create(fname, '');
+          // Immediately delete the placeholder - the caller will create the actual file
+          const createdFile = vault.getAbstractFileByPath(fname);
+          if (createdFile) {
+            await vault.trash(createdFile as TFile, true);
+          }
+          return fname;
+        } catch (createError: any) {
+          // File was created by another process between check and create
+          // Continue to next iteration
+          if (createError?.message?.includes('File already exists')) {
+            continue;
+          }
+          // For other errors (like permission issues), re-throw
+          throw createError;
+        }
+      }
+    }
+    
+    throw new Error(`Failed to find unique filepath after ${maxAttempts} attempts for ${filename}`);
+  } finally {
+    // Release lock
+    fileCreationLocks.delete(lockId);
+    lockResolver!();
+  }
+}
+
+/**
+ * Safely create a file with retry and concurrency protection
+ * @param vault
+ * @param path
+ * @param content
+ * @param options
+ */
+export async function safeCreateFile(
+  vault: Vault,
+  path: string,
+  content: string,
+  options?: {
+    maxRetries?: number;
+    overwrite?: boolean;
+  }
+): Promise<TFile> {
+  const { maxRetries = 3, overwrite = false } = options || {};
+  
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      // Check if file exists
+      const existing = vault.getAbstractFileByPath(path);
+      
+      if (existing && existing instanceof TFile) {
+        if (overwrite) {
+          await vault.modify(existing, content);
+          return existing;
+        }
+        throw new Error(`File already exists: ${path}`);
+      }
+      
+      // Create new file
+      return await vault.create(path, content);
+    } catch (error: any) {
+      // Retry on race condition
+      if (attempt < maxRetries - 1 && error?.message?.includes('File already exists')) {
+        continue;
+      }
+      throw error;
+    }
+  }
+  
+  throw new Error(`Failed to create file after ${maxRetries} attempts: ${path}`);
+}
+
 export function getDrawingFilename(settings: ExcalidrawSettings): string {
   return (
     settings.drawingFilenamePrefix +
