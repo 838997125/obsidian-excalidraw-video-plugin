@@ -63,7 +63,9 @@ export class ErrorHandler {
     this.errorLog.push({
       error: errorObj,
       context,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      severity: 'medium',
+      handled: false,
     });
     
     // Trim log if it gets too large
@@ -167,7 +169,7 @@ export class ErrorHandler {
         ? event.reason 
         : new Error(String(event.reason));
       
-      this.handleError(
+      this.handleErrorWithSeverity(
         error,
         'Unhandled Promise Rejection',
         true,
@@ -188,7 +190,7 @@ export class ErrorHandler {
 
       const error = event.error || new Error(event.message);
       
-      this.handleError(
+      this.handleErrorWithSeverity(
         error,
         `Global Error at ${event.filename}:${event.lineno}`,
         true,
