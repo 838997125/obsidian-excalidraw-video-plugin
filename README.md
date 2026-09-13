@@ -1,3 +1,19 @@
+> ## ⚠️ 项目来源声明 / Attribution & Scope
+>
+> **【中文】** 本仓库是在开源项目 **[zsviczian/obsidian-excalidraw-plugin](https://github.com/zsviczian/obsidian-excalidraw-plugin)（MIT License，原作者 Zsolt Vicze）基础上的二次开发版本，不是从零自研**。上游主体代码（约 7.9 万行 TypeScript，含 Excalidraw 白板全部核心功能）的版权归原作者及上游贡献者所有。
+>
+> 本仓库的**原创增量范围仅为 Excalidraw 白板视频录制模块 VideoRecorder**，位于：
+> - `src/view/components/VideoRecorder/`（6 个文件，约 1,924 行 TS/TSX/CSS）：录制器主组件 `index.tsx`、录制核心 `VideoRecorderCore.ts`、相机预览 `CameraPreview.tsx`、录制面板 `VideoRecorderPanel.tsx`、提示词浮层 `PromptOverlay.tsx`、样式 `styles.css`
+> - `src/shared/Dialogs/FrameSettings`（抽帧设置对话框，约 84 行）
+>
+> 功能：在 Excalidraw 白板上叠加摄像头画面、录制白板讲解视频、按帧抽取并写入画布。提交历史中 2026-03-24→03-26 的 10 次 commit 为上述增量的真实开发记录。
+>
+> **【English】** This repository is a **secondary development (fork-like modification, not a GitHub fork)** based on **[zsviczian/obsidian-excalidraw-plugin](https://github.com/zsviczian/obsidian-excalidraw-plugin)** (MIT, © Zsolt Vicze and contributors). The upstream codebase (~79k lines TS, the full Excalidraw plugin) retains its original ownership and copyright. **My original work is limited to the VideoRecorder feature (~2,000 lines TS/TSX/CSS) under `src/view/components/VideoRecorder/` and the FrameSettings dialog**, adding webcam overlay, whiteboard-talk recording and frame extraction. All credit for the base plugin goes to the upstream project.
+>
+> License: MIT，遵循上游许可。/ Following the upstream MIT License.
+
+---
+
 # Excalidraw
 
 【English | [简体中文](./docs/zh-cn/README.md)】

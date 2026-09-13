@@ -5863,7 +5863,7 @@ export default class ExcalidrawView extends TextFileView implements HoverParent{
             WelcomeScreen.Center.MenuItemLink,
             {
               icon: ICONS.heart,
-              href: "http://118.178.228.37/donate.html",
+              href: "https://github.com/838997125",
               shortcut: null,
               "aria-label": "支持此插件",
             },
